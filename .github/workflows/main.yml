@@ -15,25 +15,23 @@ jobs:
           sudo apt-get install -y nasm
 
       - name: Build via Makefile
-        run: make
+        run: ./scripts/build.sh
 
-      - name: Public artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
-          name: Build Artifact
-          path: nap
+          name: nap
+          path: ./out/nap-x86-64
 
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update -y  
-          sudo apt-get install -y nasm
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: nap
+          path: ./out/nap-x86-64
 
       - name: Run Tests
-        run: echo "TODO"
+        run: ./scripts/test.sh
